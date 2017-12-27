@@ -8,21 +8,24 @@ namespace MyProject
     {
         static void Main(string[] args)
         {
+            /* 
+              Input data: A, b, c, x0, stopping criterion, gamma.
+             */
             var list = new List<double>();
             double[,] A = new double[10, 2] {{0.2, 1},{0.4, 1},{0.6, 1},{0.8, 1},{1, 1},{1.2, 1},{1.4, 1},{1.6, 1},{1.8, 1}, {2, 1}};
             double[,] b = new double[10, 1] {{1.01}, {1.04}, {1.09}, {1.16}, {1.25}, {1.36}, {1.49}, {1.64}, {1.81}, {2}};
             double[,] c = new double[2, 1] {{1}, {1}};
-            double g = 0.8;
-            double e = 0.4;
+            double g = 0.8; //from 0 to 1
+            double e = 0.4; //stopping criterion
+            double[,] x0 = new double[2, 1] { { 0.5 }, { 0.5 } };
 
-            double[,] x0 = new double[2, 1] { { 0.5 }, { 0.5 } }; ; //matrix 2x1 (0,0)transp
             while (true)
             {
                 double[,] v = sum(b, multiplication(multiplication(A,x0), -1));
                 double[,] D = diag(v);
                 double[,] hx = multiplication(invers(multiplication(multiplication(transp(A), multiplication(invers(D), invers(D))), A)), c);
-                double[,] hv = multiplication(multiplication(A, -1), hx);
-                
+                double[,] hv = multiplication(multiplication(A, -1), hx); //need add (if hv >= 0 - return unbounded);
+
                 for (int i = 0; i < v.Length; i++) //v.length = hv.lenght
                 {
                     list.Add((-1) * v[i, 0] / hv[i, 0]);
